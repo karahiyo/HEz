@@ -1,6 +1,50 @@
+/*
+// SRM 534 Div2 Medium (500)
+
+問題
+
+N個のマスからなる盤面がある。
+マスは空または駒が置かれている。
+駒の右が空いていれば駒を一つ右に移動できる。
+駒の右とその右が駒でその右が空いていれば、駒を三つ移動できる。
+最も右の駒は直ちに取り除かれる。
+二人のプレーヤーで交互に移動操作をするとき、動かせなかったら負けとするとき
+最初のプレーヤーが勝つかどうかを求める。
+
+*/
+
 public class EllyCheckers {
     public String getWinner(String board) {
-        return "NO";
+        char[] boards = board.toCharArray();
+        boolean iselly = true; // Ellyのターンならtrue
+        boolean moved = false; // チェッカーを動かせたかどうか
+
+        while(true) {
+            moved = false;
+            int size = boards.length-1;
+            for(int a=0; a<size; a++) {
+                if(boards[a] == 'o') { // チェッカーが存在する場合
+                    if(boards[a+1] == '.') {
+                        boards[a+1] = boards[a];
+                        boards[a] = '.';
+                        moved = true;
+                    } else if(boards.length > a+3)
+                        if (boards[a+1] == 'o' 
+                                && boards[a+2] == 'o'
+                                && boards[a+3] == '.') {
+                            boards[a+3] = boards[a];
+                            boards[a] = '.';
+                            moved = true;
+                                }
+                }
+            }
+            // 終了判定
+            if (!moved)
+                return (iselly?"NO":"YES");
+
+            // EllyとKriss交代
+            iselly = (iselly?false:true);
+        }
     }
 
     public static void main(String[] args) {
@@ -16,7 +60,7 @@ public class EllyCheckers {
 
 class EllyCheckersGame {
     public static void run_test(int casenum) {
-        if (casunum != 1) {
+        if (casenum != -1) {
             if (runTestCase(casenum) == -1)
                 System.out.println("Illegal input!! Test case " + casenum + "dose not exist.");
             return;
@@ -41,60 +85,62 @@ class EllyCheckersGame {
         } else {
             System.out.println("All " + total + " tests passed!");
         }
+    }
 
-        static boolean compareOutput(String expected, String result) {
-            return expected == result;
+    static boolean compareOutput(String expected, String result) {
+        return expected.equals(result);
+    }
+
+    static String formatResult(String res) {
+        return String.format("\"%s\"", res);
+    }
+
+    static int verifyCase(int casenum, String expected, String received) {
+        System.out.println("Example " + casenum + "...");
+        if (compareOutput(expected, received)) {
+            System.out.println("PASSED");
+            return 1;
+        } else {
+            System.out.println("FAILED");
+            System.out.println("    Expected: " + formatResult(expected));
+            System.out.println("    Expected: " + formatResult(received));
+            return 0;
         }
+    }
 
-        static String formatResult(String res) {
-            return String.format("\"%s\"", res);
-        }
+    static int runTestCase(int casenum) {
+        switch (casenum) {
+            case 0: {
+                        String board = ".o...";
+                        String expected__ = "YES";
 
-        static int verify(int casenum, String expected, String received) {
-            System.out.println("Example " + casenum + "...");
-            if (compareOutput(expected, received)) {
-                System.out.println("PASSED");
-                return 1;
-            } else {
-                System.out.println("FAILED");
-                System.out.println("    Expected: " + formatResult(expected));
-                System.out.println("    Expected: " + formatResult(received));
-                return 0;
+                        return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
             }
-        }
+            case 1: {
+                        String board = "..o..o";
+                        String expected__ = "YES";
 
-        static int runTestCase(int casenum) {
-            switch (casenum) {
-                case 0: {
-                    String board = ".o...";
-                    String expected__ = "YES";
-
-                    return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
-                }
-                case 1: {
-                    String board = "..o..o";
-                    String expected__ = "YES";
-
-                    return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
-                }
-                 case 2: {
-                    String board = ".o...ooo..oo..";
-                    String expected__ = "NO";
-                    return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
-                 }
-                 case 3: {
-                    String board = "......o.ooo.o......";
-                    String expected__ = "YES";
-
-                    return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
-                 }
-                 case 4: {
-                    String board = ".o..o...o....o.....o";
-                    String expected__ = "NO";
-
-                    return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
-                 }
+                        return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
             }
+            case 2: {
+                        String board = ".o...ooo..oo..";
+                        String expected__ = "NO";
+                        return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
+            }
+            case 3: {
+                        String board = "......o.ooo.o......";
+                        String expected__ = "YES";
+
+                        return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
+            }
+            case 4: {
+                        String board = ".o..o...o....o.....o";
+                        String expected__ = "NO";
+
+                        return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
+            }
+            default:
+                    return -1;
         }
     }
 }
