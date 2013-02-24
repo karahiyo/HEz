@@ -15,38 +15,25 @@ N個のマスからなる盤面がある。
 
 public class EllyCheckers {
     public String getWinner(String board) {
-        char[] boards = board.toCharArray();
-        boolean iselly = true; // Ellyのターンならtrue
-        boolean moved = false; // チェッカーを動かせたかどうか
-
-        while(true) {
-            moved = false;
-            int size = boards.length-1;
-            for(int a=0; a<size; a++) {
-                if(boards[a] == 'o') { // チェッカーが存在する場合
-                    if(boards[a+1] == '.') {
-                        boards[a+1] = boards[a];
-                        boards[a] = '.';
-                        moved = true;
-                    } else if(boards.length > a+3)
-                        if (boards[a+1] == 'o' 
-                                && boards[a+2] == 'o'
-                                && boards[a+3] == '.') {
-                            boards[a+3] = boards[a];
-                            boards[a] = '.';
-                            moved = true;
-                                }
-                }
+        int sum = 0;
+        for(int i=0,N=board.length(); i<N; i++) {
+            if(board.charAt(i) == 'o') { 
+                sum += N-i-1;
             }
-            // 終了判定
-            if (!moved)
-                return (iselly?"NO":"YES");
-
-            // EllyとKriss交代
-            iselly = (iselly?false:true);
         }
+        return (sum%2==1?"YES":"NO");
     }
-
+/*    public String getWinner(String board) {
+        int sum = 0;
+        for (int i=0,N=board.length(); i<N; i++) {
+            if(board.charAt(i) == 'o') {
+                int p = board.length() - 1 - i;
+                sum += p/3 + p%3;
+            }
+        }
+        return (sum%2==1?"YES":"NO");
+    }
+*/
     public static void main(String[] args) {
         if(args.length == 0) {
             EllyCheckersGame.run_test(-1);
@@ -123,18 +110,18 @@ class EllyCheckersGame {
                         return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
             }
             case 2: {
-                        String board = ".o...ooo..oo..";
+                        String board = ".o...ooo..oo.."; //2+3+6+7+8+12 = 38
                         String expected__ = "NO";
                         return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
             }
             case 3: {
-                        String board = "......o.ooo.o......";
+                        String board = "......o.ooo.o......"; //7+9+10+11+12+14 = 63
                         String expected__ = "YES";
 
                         return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
             }
             case 4: {
-                        String board = ".o..o...o....o.....o";
+                        String board = ".o..o...o....o.....o"; //6+11+15+18=50
                         String expected__ = "NO";
 
                         return verifyCase(casenum, expected__, new EllyCheckers().getWinner(board));
