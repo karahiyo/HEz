@@ -2,10 +2,8 @@ public class Ants {
     public int solve(int L, int[] x) {
         int max = 0;
         for(int i=0,N=x.length; i<N; i++) {
-            if(max < L-x[i])
-                max = L-x[i];
-            else if(max < x[i])
-                max = x[i];
+            int tmp = Math.max(x[i],L-x[i]);
+            max = Math.max(max,tmp);
         }
         System.out.println("max=" + max);   
         return max;
